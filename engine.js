@@ -1,6 +1,4 @@
-define([
-    'jquery'
-], function ($) {
+define(function () {
 
     var gamesEngine = {
         /**
@@ -43,7 +41,7 @@ define([
 
             this._ticker = window.setInterval(function () {
                 that._tickerEvent();
-            }, 1000 / this._fps);
+            }, (1000 / this._fps));
         },
 
         /**
