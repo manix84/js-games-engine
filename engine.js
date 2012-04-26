@@ -1,6 +1,6 @@
 define(function () {
 
-    var gamesEngine = {
+    var engine = {
         /**
          * Set Interval's unique id, so that it can be manipulated throughout the code.
          * @type {Number}
@@ -43,6 +43,10 @@ define(function () {
              */
             _list: {},
 
+            /**
+             * [_volume description]
+             * @type {Number}
+             */
             _volume: 7,
 
             /**
@@ -69,14 +73,65 @@ define(function () {
             play: function (name) {
                 var audioTag = this._list[name];
                 audioTag.currentTime = 0;
+                audioTag.preload = true;
                 audioTag.volume = this._volume;
             }
         },
 
         music: {
+            /**
+             * A containing list of all available music.
+             * @type {Object}
+             */
+            _list: {},
+
+            /**
+             * [_volume description]
+             * @type {Number}
+             */
+            _volume: 7,
+
+            /**
+             * [add description]
+             * @param {[type]} name [description]
+             * @param {[type]} url [description]
+             */
+            add: function (name, url) {
+                var audioTag = document.createElement('audio');
+
+                this._list[name] = audioTag;
+            },
+
+            /**
+             * [remove description]
+             * @param  {[type]} name [description]
+             * @return {[type]}  [description]
+             */
+            remove: function (name) {
+                this._list[name] = null;
+                delete this._list[name];
+            },
+
+            /**
+             * [play description]
+             * @param  {String} name [description]
+             * @param  {Object} options [description]
+             */
+            play: function (name, options) {
+                options = options || {
+                    fadeIn: false,
+                    fadeOut: false,
+                    loop: true,
+                    rewindToStart: false
+                };
+
+                var audioTag = this._list[name];
+                audioTag.currentTime = 0;
+                audioTag.volume = this._volume;
+            }
 
         }
     };
 
-    return gamesEngine;
+    return engine;
 });
