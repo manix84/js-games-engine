@@ -14,13 +14,6 @@ define(function () {
         _fps: 30,
 
         /**
-         * Function to run when the ticker stops. (EG: Start Screen, Game Over)
-         */
-        stopEvent: function () {
-            window.console.info('Stop!');
-        },
-
-        /**
          * Start the ticker, and anything attached too it.
          * @param {Function} callback - Function that fires on each tick.
          */
@@ -37,35 +30,51 @@ define(function () {
         stop: function () {
             window.clearInterval(this._ticker);
             this._ticker = null;
-            this._stopEvent();
         },
 
         /**
          * Sound effect handlers.
          * @type {Object}
          */
-        sound: {
+        soundEffect: {
             /**
              * A containing list of all available sound effects.
              * @type {Object}
              */
             _list: {},
 
+            _volume: 7,
+
             /**
              * [add description]
              * @param {[type]} name [description]
              * @param {[type]} url [description]
              */
-            add: function (name, url) {},
+            add: function (name, url) {
+                var audioTag = document.createElement('audio');
+
+                this._list[name] = audioTag;
+            },
 
             /**
              * [remove description]
              * @param  {[type]} name [description]
              * @return {[type]}  [description]
              */
-            remove: function (name) {},
+            remove: function (name) {
+                this._list[name] = null;
+                delete this._list[name];
+            },
 
-            play: function (name) {}
+            play: function (name) {
+                var audioTag = this._list[name];
+                audioTag.currentTime = 0;
+                audioTag.volume = this._volume;
+            }
+        },
+
+        music: {
+
         }
     };
 
