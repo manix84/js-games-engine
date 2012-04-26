@@ -38,6 +38,34 @@ define(function () {
             window.clearInterval(this._ticker);
             this._ticker = null;
             this._stopEvent();
+        },
+
+        /**
+         * Sound effect handlers.
+         * @type {Object}
+         */
+        sound: {
+            /**
+             * A containing list of all available sound effects.
+             * @type {Object}
+             */
+            _list: {},
+
+            /**
+             * [add description]
+             * @param {[type]} name [description]
+             * @param {[type]} url [description]
+             */
+            add: function (name, url) {},
+
+            /**
+             * [remove description]
+             * @param  {[type]} name [description]
+             * @return {[type]}  [description]
+             */
+            remove: function (name) {},
+
+            play: function (name) {}
         }
     };
 
