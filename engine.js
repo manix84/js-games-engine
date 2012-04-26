@@ -14,41 +14,27 @@ define(function () {
         _fps: 30,
 
         /**
-         * The containing element on the page.
-         * @type {Object HTMLElement}
-         */
-        _gameContainer: document,
-
-        /**
-         * Function run with each tick.
-         */
-        _tickerEvent: function () {
-            window.console.count('tick');
-        },
-
-        /**
          * Function to run when the ticker stops. (EG: Start Screen, Game Over)
          */
-        _stopEvent: function () {
+        stopEvent: function () {
             window.console.info('Stop!');
         },
 
         /**
          * Start the ticker, and anything attached too it.
+         * @param {Function} callback - Function that fires on each tick.
          */
-        _start: function () {
+        start: function (callback) {
             var that = this;
 
-            this._ticker = window.setInterval(function () {
-                that._tickerEvent();
-            }, (1000 / this._fps));
+            this._ticker = window.setInterval(callback, (1000 / this._fps));
         },
 
         /**
          * Stop the ticker, and anything attached too it.
          * @return {[type]} [description]
          */
-        _stop: function () {
+        stop: function () {
             window.clearInterval(this._ticker);
             this._ticker = null;
             this._stopEvent();
