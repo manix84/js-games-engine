@@ -1,11 +1,10 @@
 define(function () {
-
+    /**
+     * Games Engine v1.0
+     * @author  Rob Taylor [manix84@gmail.com]
+     * @type {Object}
+     */
     var engine = {
-        /**
-         * Debugging on or off.
-         * @type {Boolean}
-         */
-        _debugging: true,
 
         /**
          * Set Interval's unique id, so that it can be manipulated throughout the code.
@@ -14,24 +13,24 @@ define(function () {
         _ticker: null,
 
         /**
-         * Number of frames per second.
-         * @type {Number}
-         */
-        _fps: 30,
-
-        /**
          * User defined functions to be run whenever their is a tick.
          * @type {Array}
          */
         _tickerCallbacks: [],
 
         /**
-         * [onTick description]
+         * Push callback into tick callback list, to be called when the ticker ticks.
          * @param {Function} callback - User defined function to be pushed onto the tickerCallbacks array.
          */
         onTick: function (callback) {
             this._tickerCallbacks.push(callback);
         },
+
+        /**
+         * Number of frames per second.
+         * @type {Number}
+         */
+        fps: 30,
 
         /**
          * Start the ticker, and anything attached too it.
@@ -46,12 +45,12 @@ define(function () {
                 var i = 0;
                 for (; i < that._tickerCallbacks.length; i++) {
                     that._tickerCallbacks[i]({
-                        fps: that._fps,
+                        fps: that.fps,
                         frame: frame,
-                        secondsSinceStart: (frame / that._fps)
+                        secondsSinceStart: (frame / that.fps)
                     });
                 }
-            }, (1000 / this._fps));
+            }, (1000 / this.fps));
         },
 
         /**
@@ -74,16 +73,10 @@ define(function () {
             _list: {},
 
             /**
-             * Sound Effect Volume. 0-1
-             * @type {Number}
-             */
-            _volume: 1,
-
-            /**
              * Prevents audio from playing.
              * @type {Boolean}
              */
-            _mute: false,
+            mute: false,
 
             /**
              * Add an audio tag to the page to be played.
@@ -91,7 +84,7 @@ define(function () {
              * @param {String} url - Sets the audio url.
              */
             add: function (name, url) {
-                engine.console.debug('Adding "' + name + '":', url);
+                engine.console.debug('Adding "' + name + '",', url);
                 var audioElement = new Audio(url);
 
                 audioElement.addEventListener('canplay', function () {
@@ -111,18 +104,17 @@ define(function () {
              * [play description]
              * @param  {String} name - The audio reference name. See: engine.audio.add
              * @param  {Boolean} loop - Should the audio item play in a loop.
-             * @return {[type]}  [description]
              */
             play: function (name, loop) {
                 var audioElement,
                     that = this;
+
                 if (!!this._list[name]) {
                     engine.console.debug('Playing "' + name + '"', (loop ? 'continuously' : 'once'));
 
                     this._list[name].loop = loop || false;
-                    this._list[name].volume = this._volume;
 
-                    if (!this._mute) {
+                    if (!this.mute) {
                         if (!this._list[name].canPlay) {
                             this._list[name].addEventListener('canplay', function () {
                                 this.play();
@@ -139,9 +131,8 @@ define(function () {
             },
 
             /**
-             * [pause description]
-             * @param  {[type]} name [description]
-             * @return {[type]}  [description]
+             * Pause audio file.
+             * @param  {String} name - The audio reference name. See: engine.audio.add
              */
             pause: function (name) {
                 if (!!this._list[name]) {
@@ -155,7 +146,6 @@ define(function () {
             /**
              * Stop and remove the sound file from play and pause.
              * @param  {String} name - The audio reference name. See: engine.audio.add
-             * @return {[type]}  [description]
              */
             stop: function (name) {
                 if (this._list[name]) {
@@ -171,12 +161,13 @@ define(function () {
         },
 
         console: {
+            enable: true,
             debug: function () {
                 var displayName = '[' + arguments.callee.caller.prototype.displayName + ']';
                 Array.prototype.reverse.call(arguments);
                 Array.prototype.push.call(arguments, displayName);
                 Array.prototype.reverse.call(arguments);
-                if (!!window.console.debug && !!engine._debugging) {
+                if (!!window.console.debug && !!this.enable) {
                     window.console.debug.apply(window.console, arguments);
                 }
             },
@@ -185,7 +176,7 @@ define(function () {
                 Array.prototype.reverse.call(arguments);
                 Array.prototype.push.call(arguments, displayName);
                 Array.prototype.reverse.call(arguments);
-                if (!!window.console.info && !!engine._debugging) {
+                if (!!window.console.info && !!this.enable) {
                     window.console.info.apply(window.console, arguments);
                 }
             },
@@ -194,7 +185,7 @@ define(function () {
                 Array.prototype.reverse.call(arguments);
                 Array.prototype.push.call(arguments, displayName);
                 Array.prototype.reverse.call(arguments);
-                if (!!window.console.warn && !!engine._debugging) {
+                if (!!window.console.warn && !!this.enable) {
                     window.console.warn.apply(window.console, arguments);
                 }
             }
