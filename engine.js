@@ -19,12 +19,30 @@ define(function () {
          */
         _fps: 30,
 
+        _tickerCallbacks: [],
+
+        onTick: function () {
+
+        },
+
         /**
          * Start the ticker, and anything attached too it.
          * @param {Function} callback - Function that fires on each tick.
          */
         start: function (callback) {
-            this._ticker = window.setInterval(callback, (1000 / this._fps));
+            var i = 0,
+                count = 0,
+                that = this;
+
+            this._ticker = window.setInterval(function () {
+                for (; i < that._tickerCallbacks.length; i++) {
+                    that._tickerCallbacks[i]({
+                        fps: that._fps,
+                        tickCount: count++,
+                        secondsSinceStart: (count % that._fps)
+                    });
+                }
+            }, (1000 / this._fps));
         },
 
         /**
