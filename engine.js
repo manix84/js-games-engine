@@ -82,33 +82,61 @@ define(function () {
              * @param {String} url - Sets the audio url.
              */
             add: function (name, url) {
-                var audioElement;
-
                 engine.console.debug('Adding "' + name + '":', url);
+                var audioElement = new Audio(url);
 
-                this._list[name] = url;
+                audioElement.load();
+                audioElement.preload = 'auto';
+                audioElement.controls = false;
+
+                this._list[name] = audioElement;
             },
 
             /**
-             * Remove the audio tag from the page.
-             * @param {String} name - Name of the audio tag that needs removing.
+             * [play description]
+             * @param  {String} name - The audio reference name. See: engine.audio.add
+             * @param  {Boolean} loop - Should the audio item play in a loop.
+             * @return {[type]}  [description]
              */
-            remove: function (name) {
-                this._list[name].parentNode.removeChild(this._list[name]);
-                delete this._list[name];
-            },
-
-            play: function (name) {
-                var audioElement;
+            play: function (name, loop) {
+                var audioElement,
+                    that = this;
                 if (!!this._list[name]) {
-                    engine.console.debug('[engine.audio.play]', 'playing "' + name + '"');
-                    audioElement = new Audio(this._list[name]);
                     engine.console.debug('Playing "' + name + '"', (loop ? 'continuously' : 'once'));
 
-                    audioElement.controls = false;
-                    audioElement.play();
+                    this._list[name].loop = loop || false;
+                    this._list[name].currentTime = 0;
+                    that._list[name].play();
                 } else {
                     engine.console.warn('"' + name + '" does not exist.');
+                }
+            },
+
+            /**
+             * [pause description]
+             * @param  {[type]} name [description]
+             * @return {[type]}  [description]
+             */
+            pause: function (name) {
+                if (!!this._list[name]) {
+                    engine.console.debug('Paused "' + name + '"');
+                    this._list[name].pause();
+                } else {
+                    engine.console.warn('"' + name + '" does not exist.');
+                }
+            },
+
+            /**
+             * Stop and remove the sound file from play and pause.
+             * @param  {String} name - The audio reference name. See: engine.audio.add
+             * @return {[type]}  [description]
+             */
+            stop: function (name) {
+                if (this._list[name]) {
+                    engine.console.debug('Stopped "' + name + '"');
+                    this._list[name].pause();
+                } else {
+                    engine.console.warn('"' + name + '" isn\'t playing');
                 }
             }
         },
