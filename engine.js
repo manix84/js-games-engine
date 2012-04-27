@@ -66,6 +66,8 @@ define(function () {
             add: function (name, url) {
                 var audioElement;
 
+                engine.console.debug('Adding "' + name + '":', url);
+
                 this._list[name] = url;
             },
 
@@ -83,33 +85,63 @@ define(function () {
                 if (!!this._list[name]) {
                     engine.console.debug('[engine.audio.play]', 'playing "' + name + '"');
                     audioElement = new Audio(this._list[name]);
+                    engine.console.debug('Playing "' + name + '"', (loop ? 'continuously' : 'once'));
 
                     audioElement.controls = false;
                     audioElement.play();
                 } else {
-                    engine.console.warn('[engine.audio.play]', name + " does not exist.");
+                    engine.console.warn('"' + name + '" does not exist.');
                 }
             }
         },
 
         console: {
             debug: function () {
+                var displayName = '[' + arguments.callee.caller.prototype.displayName + ']';
+                Array.prototype.reverse.call(arguments);
+                Array.prototype.push.call(arguments, displayName);
+                Array.prototype.reverse.call(arguments);
                 if (!!window.console.debug && !!engine._debugging) {
                     window.console.debug.apply(window.console, arguments);
                 }
             },
             info: function () {
+                var displayName = '[' + arguments.callee.caller.prototype.displayName + ']';
+                Array.prototype.reverse.call(arguments);
+                Array.prototype.push.call(arguments, displayName);
+                Array.prototype.reverse.call(arguments);
                 if (!!window.console.info && !!engine._debugging) {
                     window.console.info.apply(window.console, arguments);
                 }
             },
             warn: function () {
+                var displayName = '[' + arguments.callee.caller.prototype.displayName + ']';
+                Array.prototype.reverse.call(arguments);
+                Array.prototype.push.call(arguments, displayName);
+                Array.prototype.reverse.call(arguments);
                 if (!!window.console.warn && !!engine._debugging) {
                     window.console.warn.apply(window.console, arguments);
                 }
             }
         }
+    },
+    addDisplayNames = function (classObj, baseName) {
+        var objName;
+
+        for (objName in classObj) {
+            if (classObj.hasOwnProperty(objName) && !!classObj[objName]) {
+                if (typeof classObj[objName] === 'function') {
+                    classObj[objName].prototype = {
+                        displayName: baseName + '.' + objName
+                    };
+                }
+                if (typeof classObj[objName] === 'object' && objName !== 'prototype') {
+                    addDisplayNames(classObj[objName], baseName + '.' + objName);
+                }
+            }
+        }
     };
+    addDisplayNames(engine, 'engine');
 
     return engine;
 });
