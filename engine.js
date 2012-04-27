@@ -120,13 +120,18 @@ define(function () {
                     engine.console.debug('Playing "' + name + '"', (loop ? 'continuously' : 'once'));
 
                     this._list[name].loop = loop || false;
+                    this._list[name].volume = this._volume;
 
-                    if (!this._list[name].canPlay) {
-                        this._list[name].addEventListener('canplay', function () {
-                            this.play();
-                        }, false);
+                    if (!this._mute) {
+                        if (!this._list[name].canPlay) {
+                            this._list[name].addEventListener('canplay', function () {
+                                this.play();
+                            }, false);
+                        } else {
+                            this._list[name].play();
+                        }
                     } else {
-                        this._list[name].play();
+                        engine.console.warn('"Audio is muted.');
                     }
                 } else {
                     engine.console.warn('"' + name + '" does not exist.');
