@@ -19,10 +19,18 @@ define(function () {
          */
         _fps: 30,
 
+        /**
+         * User defined functions to be run whenever their is a tick.
+         * @type {Array}
+         */
         _tickerCallbacks: [],
 
-        onTick: function () {
-
+        /**
+         * [onTick description]
+         * @param {Function} callback - User defined function to be pushed onto the tickerCallbacks array.
+         */
+        onTick: function (callback) {
+            this._tickerCallbacks.push(callback);
         },
 
         /**
@@ -30,16 +38,17 @@ define(function () {
          * @param {Function} callback - Function that fires on each tick.
          */
         start: function (callback) {
-            var i = 0,
-                count = 0,
+            var frame = 0,
                 that = this;
 
             this._ticker = window.setInterval(function () {
+                frame = frame + 1;
+                var i = 0;
                 for (; i < that._tickerCallbacks.length; i++) {
                     that._tickerCallbacks[i]({
                         fps: that._fps,
-                        tickCount: count++,
-                        secondsSinceStart: (count % that._fps)
+                        frame: frame,
+                        secondsSinceStart: (frame / that._fps)
                     });
                 }
             }, (1000 / this._fps));
@@ -85,6 +94,12 @@ define(function () {
                 engine.console.debug('Adding "' + name + '":', url);
                 var audioElement = new Audio(url);
 
+                audioElement.addEventListener('canplay', function () {
+                    this.prototype = {
+                        canPlay: true
+                    };
+                }, true);
+
                 audioElement.load();
                 audioElement.preload = 'auto';
                 audioElement.controls = false;
@@ -105,8 +120,14 @@ define(function () {
                     engine.console.debug('Playing "' + name + '"', (loop ? 'continuously' : 'once'));
 
                     this._list[name].loop = loop || false;
-                    this._list[name].currentTime = 0;
-                    that._list[name].play();
+
+                    if (!this._list[name].canPlay) {
+                        this._list[name].addEventListener('canplay', function () {
+                            this.play();
+                        }, false);
+                    } else {
+                        this._list[name].play();
+                    }
                 } else {
                     engine.console.warn('"' + name + '" does not exist.');
                 }
@@ -135,6 +156,9 @@ define(function () {
                 if (this._list[name]) {
                     engine.console.debug('Stopped "' + name + '"');
                     this._list[name].pause();
+                    if (this._list[name].currentTime > 0) {
+                        this._list[name].currentTime = 0;
+                    }
                 } else {
                     engine.console.warn('"' + name + '" isn\'t playing');
                 }
