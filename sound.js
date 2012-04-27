@@ -19,7 +19,7 @@ define(function () {
 
         /**
          * Add an audio tag to the page to be played.
-         * @param {String} name - Assigns a name to the audio tag.  This is used as a reference for playing, etc.
+         * @param {String} name - Assigns a name to the audio tag. This is used as a reference for playing, etc.
          * @param {String} url - Sets the audio url.
          */
         add: function (name, url) {

@@ -16,14 +16,14 @@ define(function () {
          * User defined functions to be run whenever their is a tick.
          * @type {Array}
          */
-        _tickerCallbacks: [],
+        _callbacks: [],
 
         /**
          * Push callback into tick callback list, to be called when the ticker ticks.
          * @param {Function} callback - User defined function to be pushed onto the tickerCallbacks array.
          */
         onTick: function (callback) {
-            this._tickerCallbacks.push(callback);
+            this._callbacks.push(callback);
         },
 
         /**
@@ -34,17 +34,16 @@ define(function () {
 
         /**
          * Start the ticker, and anything attached too it.
-         * @param {Function} callback - Function that fires on each tick.
          */
-        start: function (callback) {
+        start: function () {
             var frame = 0,
                 that = this;
 
             this._ticker = window.setInterval(function () {
                 frame = frame + 1;
                 var i = 0;
-                for (; i < that._tickerCallbacks.length; i++) {
-                    that._tickerCallbacks[i]({
+                for (; i < that._callbacks.length; i++) {
+                    that._callbacks[i]({
                         fps: that.fps,
                         frame: frame,
                         secondsSinceStart: (frame / that.fps)
