@@ -166,7 +166,7 @@ define(function () {
          * @param  {String} elementId - Element ID to attach event too.
          * @param  {String} keyName - Key name, mapped from this._map. Case insensitive.
          * @param  {Function} callback - Function to run when key is pressed.
-         * @param  {Boolean} requireModifier - [description]
+         * @param  {Boolean} [requireModifier] - Does CTRL, ALT, or SHIFT need to held down while the selected key is pressed.
          */
         attachListener: function (elementId, keyName, callback, requireModifier) {
             keyName = keyName.toUpperCase();
