@@ -21,9 +21,11 @@ define(function () {
         /**
          * Push callback into tick callback list, to be called when the ticker ticks.
          * @param {Function} callback - User defined function to be pushed onto the tickerCallbacks array.
+         * @return {Object} Ticker parent object
          */
         onTick: function (callback) {
             this._callbacks.push(callback);
+            return this;
         },
 
         /**
@@ -33,30 +35,52 @@ define(function () {
         fps: 30,
 
         /**
-         * Start the ticker, and anything attached too it.
+         * Current frame number, to be passed in the callbacks.
+         * @type {Number}
          */
-        start: function () {
-            var frame = 0,
-                that = this;
+        _currentFrame: 0,
 
-            this._ticker = window.setInterval(function () {
-                frame = frame + 1;
+        /**
+         * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
+         * @todo Need to look into adding a skip-frame ability.
+         * @todo Add FPS tracking, to show true FPS in results.
+         * @todo Should add a warning if FPS drops below requirements.
+         */
+        _tick: function () {
+            var that = this;
+
+            this._ticker = window.setTimeout(function () {
+                that._currentFrame++;
                 var i = 0;
                 for (; i < that._callbacks.length; i++) {
                     that._callbacks[i]({
                         fps: that.fps,
-                        frame: frame,
-                        secondsSinceStart: (frame / that.fps)
+                        actualFps: that.fps,
+                        frame: that._currentFrame,
+                        secondsSinceStart: (that._currentFrame / that.fps)
                     });
                 }
+                that._tick();
             }, (1000 / this.fps));
         },
 
         /**
+         * Start the ticker, and anything attached too it.
+         * @return {Object} Ticker parent object
+         */
+        start: function () {
+            this._currentFrame = 0;
+            this._tick();
+            return this;
+        },
+
+        /**
          * Stop the ticker, and anything attached too it.
+         * @return {Object} Ticker parent object
          */
         stop: function () {
-            window.clearInterval(this._ticker);
+            window.clearTimeout(this._ticker);
+            return this;
         }
     };
 
