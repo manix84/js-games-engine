@@ -8,6 +8,7 @@ define(function () {
         /**
          * The list of key name with their corrisponding .
          * @private
+         * @type {Object}
          */
         _map: {
             'BACKSPACE': 8,
@@ -141,18 +142,37 @@ define(function () {
         },
 
         /**
+         * Adds an event listener to a DOM Element.
+         * @private
+         * @param {html object} attachTo - The object to attach the event listener to.
+         * @param {string} name - The event name, minus the "on".
+         * @param {function} callback - The function to be called when the event fires.
+         */
+        _addListener: function (attachTo, eventName, callback) {
+            eventName = eventName.toLowerCase();
+            if (typeof attachTo.addEventListener === 'function') {
+                attachTo.addEventListener(eventName, callback, false);
+            }
+            if (typeof attachTo.attachEvent === 'object') {
+                attachTo.attachEvent('on' + eventName, callback);
+            }
+            attachTo['on' + eventName] = callback;
+        },
+
+        /**
          * Attach a key listener to the element.
-         *
          * --- PLEASE NOTE, THIS IS MASSIVELY INCOMPLETE ---
          *
-         * @param  {[type]} attachTo - Element name.
-         * @param  {[type]} keyName - Key name, mapped from this._map. Case insensitive.
-         * @param  {Function} callback - [description]
-         * @param  {[type]} requireModifier - [description]
+         * @param  {String} elementId - Element ID to attach event too.
+         * @param  {String} keyName - Key name, mapped from this._map. Case insensitive.
+         * @param  {Function} callback - Function to run when key is pressed.
+         * @param  {Boolean} requireModifier - [description]
          */
-        attachListener: function (attachTo, keyName, callback, requireModifier) {
+        attachListener: function (elementId, keyName, callback, requireModifier) {
             keyName = keyName.toUpperCase();
-            $(attachTo).bind('keyDown', function (element, event) {
+            var element = document.getElementById(elementId);
+
+            this._addListener(element, 'keydown', function () {
                 var modifier = false;
                 if (event.shiftKey) {
                     modifier = 'SHIFT';
