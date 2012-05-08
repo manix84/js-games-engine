@@ -37,10 +37,18 @@ define(function () {
         fps: 30,
 
         /**
-         * Current frame number, to be passed in the callbacks.
-         * @type {Number}
+         * Track certain statistics about the process.
+         * @type {Object}
          */
-        _currentFrame: 0,
+        _tracking: {
+            /**
+             * Current frame number, to be passed in the callbacks.
+             * @private
+             * @type {Number}
+             */
+            _currentFrame: 0,
+            _currentFps: 0
+        },
 
         /**
          * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
