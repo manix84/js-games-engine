@@ -8,12 +8,14 @@ define(function () {
 
         /**
          * Set Interval's unique id, so that it can be manipulated throughout the code.
+         * @private
          * @type {Number}
          */
         _ticker: null,
 
         /**
          * User defined functions to be run whenever their is a tick.
+         * @private
          * @type {Array}
          */
         _callbacks: [],
