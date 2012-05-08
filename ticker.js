@@ -50,17 +50,26 @@ define(function () {
          * @todo Should add a warning if FPS drops below requirements.
          */
         _tick: function () {
-            var that = this;
+            var that = this,
+                start = new Date().getTime(),
+                end, actualFps;
 
             this._ticker = window.setTimeout(function () {
                 that._currentFrame++;
                 var i = 0;
                 for (; i < that._callbacks.length; i++) {
+                    end = new Date().getTime();
+                    actualFps = (1000 * (end - start));
+                    if (actualFps > this.fps) {
+                        // Some warnin about the framerate here
+                    }
+
                     that._callbacks[i]({
                         fps: that.fps,
-                        actualFps: that.fps,
+                        actualFps: (actualFps < that.fps ? that.fps : actualFps),
                         frame: that._currentFrame,
-                        secondsSinceStart: (that._currentFrame / that.fps)
+                        executionTime: ((end - start) / 1000),
+                        sinceStart: (that._currentFrame / that.fps)
                     });
                 }
                 that._tick();
