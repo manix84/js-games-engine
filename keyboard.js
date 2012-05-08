@@ -144,9 +144,9 @@ define(function () {
         /**
          * Adds an event listener to a DOM Element.
          * @private
-         * @param {html object} attachTo - The object to attach the event listener to.
-         * @param {string} name - The event name, minus the "on".
-         * @param {function} callback - The function to be called when the event fires.
+         * @param {HTML Object} attachTo - The object to attach the event listener to.
+         * @param {String} name - The event name, minus the "on".
+         * @param {Function} callback - The function to be called when the event fires.
          */
         _addListener: function (attachTo, eventName, callback) {
             eventName = eventName.toLowerCase();
