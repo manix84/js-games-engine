@@ -44,6 +44,7 @@ define(function () {
 
         /**
          * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
+         * @private
          * @todo Need to look into adding a skip-frame ability.
          * @todo Add FPS tracking, to show true FPS in results.
          * @todo Should add a warning if FPS drops below requirements.
