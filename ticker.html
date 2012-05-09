@@ -15,17 +15,16 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
   </head>
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/manix84/js-games-engine">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/manix84/js-games-engine/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/manix84/js-games-engine/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
+    <div id="header">
+      <nav>
+        <li class="fork"><a href="https://github.com/manix84/js-games-engine">View On GitHub</a></li>
+        <li class="downloads"><a href="https://github.com/manix84/js-games-engine/zipball/master">ZIP</a></li>
+        <li class="downloads"><a href="https://github.com/manix84/js-games-engine/tarball/master">TAR</a></li>
+        <li class="title">DOWNLOADS</li>
+      </nav>
+    </div><!-- end header -->
 
     <div class="wrapper">
       <section>
@@ -40,20 +39,38 @@
         <ul>
           <li><a href="index.html">back</a></li>
         </ul>
+        <script>
+        </script>
+        <h2>Example Code:</h2>
+        <pre>ticker.start(function (obj) {
+    var fps = Math.round(obj.fps);
+    stats.highest = (stats.highest > fps ? stats.highest : fps);
+    stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
+
+    document.getElementById('fps').innerHTML = fps;
+    document.getElementById('highest').innerHTML = stats.highest;
+    document.getElementById('lowest').innerHTML = stats.lowest;
+});</pre>
+        <h2>Results</h2>
+        <div>
+          <div>Current FPS: <span id='fps'></span></div>
+          <div>Highest FPS: <span id='highest'></span></div>
+          <div>Lowest FPS: <span id='lowest'></span></div>
+        </div>
       </section>
 
     </div>
     <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-30459282-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-30459282-1");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
 
   </body>
 </html>

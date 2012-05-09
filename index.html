@@ -15,7 +15,32 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="scripts/require.js"></script>
+    <script type='text/javascript'>
+      require({
+        baseUrl: '../js-games-engine/',
+        paths: {
+          "jquery": "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min",
+        }
+      }, [
+        'ticker'
+      ], function (ticker) {
+        var stats = {
+          highest: 0,
+          lowest: 100
+        }
+        window.ticker = ticker;
+        ticker.start(function (obj) {
+          var fps = Math.round(obj.fps);
+          stats.highest = (stats.highest > fps ? stats.highest : fps);
+          stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
 
+          document.getElementById('fps').innerHTML = fps;
+          document.getElementById('highest').innerHTML = stats.highest;
+          document.getElementById('lowest').innerHTML = stats.lowest;
+        });
+      });
+    </script>
   </head>
   <body>
       <div id="header">
@@ -46,16 +71,16 @@
 
     </div>
     <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-30459282-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-30459282-1");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
 
   </body>
 </html>
