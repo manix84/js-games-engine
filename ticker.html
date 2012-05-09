@@ -15,6 +15,32 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="javascripts/require.js"></script>
+    <script type='text/javascript'>
+      require({
+        baseUrl: 'javascripts/',
+        paths: {
+          "jquery": "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min",
+        }
+      }, [
+        'ticker'
+      ], function (ticker) {
+        var stats = {
+          highest: 0,
+          lowest: 9999
+        }
+        window.ticker = ticker;
+        ticker.start(function (obj) {
+          var fps = Math.round(obj.fps);
+          stats.highest = (stats.highest > fps ? stats.highest : fps);
+          stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
+
+          document.getElementById('fps').innerHTML = fps;
+          document.getElementById('highest').innerHTML = stats.highest;
+          document.getElementById('lowest').innerHTML = stats.lowest;
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="header">
@@ -42,14 +68,18 @@
         <script>
         </script>
         <h2>Example Code:</h2>
-        <pre>ticker.start(function (obj) {
-    var fps = Math.round(obj.fps);
-    stats.highest = (stats.highest > fps ? stats.highest : fps);
-    stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
+        <pre>var stats = {
+  highest: 0,
+  lowest: 9999
+}
+ticker.start(function (obj) {
+  var fps = Math.round(obj.fps);
+  stats.highest = (stats.highest > fps ? stats.highest : fps);
+  stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
 
-    document.getElementById('fps').innerHTML = fps;
-    document.getElementById('highest').innerHTML = stats.highest;
-    document.getElementById('lowest').innerHTML = stats.lowest;
+  document.getElementById('fps').innerHTML = fps;
+  document.getElementById('highest').innerHTML = stats.highest;
+  document.getElementById('lowest').innerHTML = stats.lowest;
 });</pre>
         <h2>Results</h2>
         <div>
