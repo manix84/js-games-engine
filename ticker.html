@@ -68,6 +68,12 @@
         </ul>
         <script>
         </script>
+        <h3>Code in Action:</h3>
+        <div>
+          <div>Current FPS: <span id='fps'></span></div>
+          <div>Highest FPS: <span id='highest'></span></div>
+          <div>Lowest FPS: <span id='lowest'></span></div>
+        </div>
         <h3>Example Code:</h3>
         <pre>var stats = {
   highest: 0,
@@ -82,12 +88,6 @@ ticker.start(function (obj) {
   document.getElementById('highest').innerHTML = stats.highest;
   document.getElementById('lowest').innerHTML = stats.lowest;
 });</pre>
-        <h3>Results</h3>
-        <div>
-          <div>Current FPS: <span id='fps'></span></div>
-          <div>Highest FPS: <span id='highest'></span></div>
-          <div>Lowest FPS: <span id='lowest'></span></div>
-        </div>
       </section>
 
     </div>
