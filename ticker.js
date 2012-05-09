@@ -73,32 +73,22 @@ define(function () {
 
         /**
          * Start the ticker, and anything attached too it.
-         * @param {Function} callback - User defined function to run on tick.
+         * @param {Function} [callback] - User defined function to run on tick. This is only optional if a callback has
+         *                                already been set.
          * @return {Object} Ticker parent object
          */
         start: function (callback) {
             if (callback) {
-                this._tracking.lastTickStart = new Date().getTime();
-                this._tracking.currentFps = this.fps;
                 this._callback = callback;
                 this._currentFrame = 0;
-                this._tick();
-            } else {
-                // warning: No callback set.
+            } else if (!this._callback) {
+                throw new Error('No callback set.');
+            } else if (!!this._ticker) {
+                throw new Error('Ticker already running.');
             }
-            return this;
-        },
 
-        /**
-         * Pause and restart ticker
-         * @return {Object} Ticker parent object
-         */
-        pauseToggle: function () {
-            if (this._ticker) {
-                this.stop();
-            } else {
-                this._tick();
-            }
+            this._tracking.lastTickStart = new Date().getTime();
+            this._tick();
             return this;
         },
 
@@ -108,6 +98,7 @@ define(function () {
          */
         stop: function () {
             window.clearTimeout(this._ticker);
+            this._ticker = null;
             return this;
         }
     };
