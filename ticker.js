@@ -62,7 +62,7 @@ define(function () {
                 that._callback({
                     fps: that._tracking.currentFps,
                     frame: that._tracking.currentFrame,
-                    executionTime: that._tracking.executionTime
+                    prevExecutionTime: that._tracking.executionTime
                 });
                 end = new Date().getTime();
 
