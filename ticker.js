@@ -24,7 +24,7 @@ define(function () {
          * Number of frames per second.
          * @type {Number}
          */
-        fps: 30,
+        fps: 60,
 
         /**
          * Track certain statistics about the process.
@@ -57,6 +57,7 @@ define(function () {
                 start = new Date().getTime();
 
                 that._tracking.currentFrame++;
+                that._tracking.currentFps = (1000 / (start - that._tracking.lastTickStart));
 
                 that._callback({
                     fps: that._tracking.currentFps,
@@ -66,7 +67,6 @@ define(function () {
                 end = new Date().getTime();
 
                 that._tracking.executionTime = ((start - that._tracking.lastTickStart) / 1000);
-                that._tracking.currentFps = (1000 / (start - that._tracking.lastTickStart));
                 that._tracking.lastTickStart = start;
 
             }, (1000 / this.fps));
