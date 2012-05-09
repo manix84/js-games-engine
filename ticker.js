@@ -38,7 +38,8 @@ define(function () {
              */
             currentFps: 0,
             currentFrame: 0,
-            executionTime: 0
+            executionTime: 0,
+            lastTickStart: 0
         },
 
         /**
@@ -50,7 +51,7 @@ define(function () {
          */
         _tick: function () {
             var that = this,
-                start, end, fps;
+                start, end, lastTickStart;
 
             this._ticker = window.setTimeout(function () {
                 that._tick();
@@ -59,15 +60,15 @@ define(function () {
                 that._tracking.currentFrame++;
 
                 that._callback({
-                    fps: that._tracking.currentFps || that.fps,
+                    fps: that._tracking.currentFps,
                     frame: that._tracking.currentFrame,
                     executionTime: that._tracking.executionTime
                 });
                 end = new Date().getTime();
-                fps = (1000 / (end - start));
 
-                that._tracking.executionTime = ((end - start) / 1000);
-                that._tracking.currentFps = (fps < that.fps ? fps : that.fps);
+                that._tracking.executionTime = ((start - that._tracking.lastTickStart) / 1000);
+                that._tracking.currentFps = (1000 / (start - that._tracking.lastTickStart));
+                that._tracking.lastTickStart = start;
 
             }, (1000 / this.fps));
         },
@@ -79,6 +80,8 @@ define(function () {
          */
         start: function (callback) {
             if (callback) {
+                this._tracking.lastTickStart = new Date().getTime();
+                this._tracking.currentFps = this.fps;
                 this._callback = callback;
                 this._currentFrame = 0;
                 this._tick();
