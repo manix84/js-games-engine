@@ -14,21 +14,11 @@ define(function () {
         _ticker: null,
 
         /**
-         * User defined functions to be run whenever their is a tick.
+         * User defined function to be run whenever their is a tick.
          * @private
-         * @type {Array}
+         * @type {Function}
          */
-        _callbacks: [],
-
-        /**
-         * Push callback into tick callback list, to be called when the ticker ticks.
-         * @param {Function} callback - User defined function to be pushed onto the tickerCallbacks array.
-         * @return {Object} Ticker parent object
-         */
-        onTick: function (callback) {
-            this._callbacks.push(callback);
-            return this;
-        },
+        _callback: null,
 
         /**
          * Number of frames per second.
@@ -46,8 +36,9 @@ define(function () {
              * @private
              * @type {Number}
              */
-            _currentFrame: 0,
-            _currentFps: 0
+            currentFps: 0,
+            currentFrame: 0,
+            executionTime: 0
         },
 
         /**
@@ -59,38 +50,54 @@ define(function () {
          */
         _tick: function () {
             var that = this,
-                start = new Date().getTime(),
-                end, actualFps;
+                start, end, fps;
 
             this._ticker = window.setTimeout(function () {
-                that._currentFrame++;
-                var i = 0;
-                for (; i < that._callbacks.length; i++) {
-                    end = new Date().getTime();
-                    actualFps = (1000 * (end - start));
-                    if (actualFps > this.fps) {
-                        // Some warnin about the framerate here
-                    }
-
-                    that._callbacks[i]({
-                        fps: that.fps,
-                        actualFps: (actualFps < that.fps ? that.fps : actualFps),
-                        frame: that._currentFrame,
-                        executionTime: ((end - start) / 1000),
-                        sinceStart: (that._currentFrame / that.fps)
-                    });
-                }
                 that._tick();
+                start = new Date().getTime();
+
+                that._tracking.currentFrame++;
+
+                that._callback({
+                    fps: that._tracking.currentFps || that.fps,
+                    frame: that._tracking.currentFrame,
+                    executionTime: that._tracking.executionTime
+                });
+                end = new Date().getTime();
+                fps = (1000 / (end - start));
+
+                that._tracking.executionTime = ((end - start) / 1000);
+                that._tracking.currentFps = (fps < that.fps ? fps : that.fps);
+
             }, (1000 / this.fps));
         },
 
         /**
          * Start the ticker, and anything attached too it.
+         * @param {Function} callback - User defined function to run on tick.
          * @return {Object} Ticker parent object
          */
-        start: function () {
-            this._currentFrame = 0;
-            this._tick();
+        start: function (callback) {
+            if (callback) {
+                this._callback = callback;
+                this._currentFrame = 0;
+                this._tick();
+            } else {
+                // warning: No callback set.
+            }
+            return this;
+        },
+
+        /**
+         * Pause and restart ticker
+         * @return {Object} Ticker parent object
+         */
+        pauseToggle: function () {
+            if (this._ticker) {
+                this.stop();
+            } else {
+                this._tick();
+            }
             return this;
         },
 
