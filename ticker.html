@@ -25,19 +25,59 @@
       }, [
         'ticker'
       ], function (ticker) {
-        var stats = {
-          highest: 0,
-          lowest: 9999
-        }
-        window.ticker = ticker;
-        ticker.start(function (obj) {
-          var fps = Math.round(obj.fps);
-          stats.highest = (stats.highest > fps ? stats.highest : fps);
-          stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
+        $(document).ready(function () {
+          var stats = {
+            highest: 0,
+            lowest: 9999,
+            average: 0,
+            lots: []
+          }
+          window.ticker = ticker;
+          ticker.start(function (obj) {
+            var fps = Math.round(obj.fps);
+            stats.highest = (stats.highest > fps ? stats.highest : fps);
+            stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
+            stats.lots.push(fps);
 
-          document.getElementById('fps').innerHTML = fps;
-          document.getElementById('highest').innerHTML = stats.highest;
-          document.getElementById('lowest').innerHTML = stats.lowest;
+            stats.average = 0;
+            for (var i = 0; i < stats.lots.length; i++) {
+              stats.average += stats.lots[i];
+            }
+            stats.average = Math.round(stats.average / stats.lots.length);
+
+            document.getElementById('fps').innerHTML = fps;
+            document.getElementById('highest').innerHTML = stats.highest;
+            document.getElementById('lowest').innerHTML = stats.lowest;
+            document.getElementById('average').innerHTML = stats.average;
+            // if (obj.frame % (30 * 10) === 0) {
+            //   stats = {
+            //     highest: 0,
+            //     lowest: 9999,
+            //     average: 0,
+            //     lots: []
+            //   }
+            // }
+          }).stop();
+
+          $('#start_fps_tracking').click(function () {
+            ticker.start();
+          });
+          $('#stop_fps_tracking').click(function () {
+            ticker.stop();
+          });
+          $('#clear_fps_tracking').click(function () {
+            ticker.stop();
+            stats = {
+              highest: 0,
+              lowest: 9999,
+              average: 0,
+              lots: []
+            }
+            document.getElementById('fps').innerHTML = '';
+            document.getElementById('highest').innerHTML = '';
+            document.getElementById('lowest').innerHTML = '';
+            document.getElementById('average').innerHTML = '';
+          });
         });
       });
     </script>
@@ -73,22 +113,39 @@
           <div>Current FPS: <span id='fps'></span></div>
           <div>Highest FPS: <span id='highest'></span></div>
           <div>Lowest FPS: <span id='lowest'></span></div>
+          <div>Average FPS: <span id='average'></span></div>
+        </div><br />
+        <div>
+          <button id='start_fps_tracking'>Start</button>
+          <button id='stop_fps_tracking'>Stop</button>
+          <button id='clear_fps_tracking'>Clear</button>
         </div>
         <br /><br />
 
         <h3>Example Code:</h3>
         <pre>var stats = {
   highest: 0,
-  lowest: 9999
+  lowest: 9999,
+  average: 0,
+  lots: []
 }
+window.ticker = ticker;
 ticker.start(function (obj) {
   var fps = Math.round(obj.fps);
   stats.highest = (stats.highest > fps ? stats.highest : fps);
   stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
+  stats.lots.push(fps);
+
+  stats.average = 0;
+  for (var i = 0; i < stats.lots.length; i++) {
+    stats.average += stats.lots[i];
+  }
+  stats.average = Math.round(stats.average / stats.lots.length);
 
   document.getElementById('fps').innerHTML = fps;
   document.getElementById('highest').innerHTML = stats.highest;
   document.getElementById('lowest').innerHTML = stats.lowest;
+  document.getElementById('average').innerHTML = stats.average;
 });</pre>
       </section>
 
