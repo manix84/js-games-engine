@@ -24,7 +24,7 @@ define(function () {
          * Number of frames per second.
          * @type {Number}
          */
-        fps: 60,
+        fps: 30,
 
         /**
          * Track certain statistics about the process.
