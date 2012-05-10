@@ -4,44 +4,26 @@ define(function () {
      * @author  Rob Taylor [manix84@gmail.com]
      * @type {Object}
      */
-    var ticker = {
+    var ticker = function (callback) {
+        // Collecting and saving unique callback.
+        this._callback = callback;
 
-        /**
-         * Set Interval's unique id, so that it can be manipulated throughout the code.
-         * @private
-         * @type {Number}
-         */
-        _ticker: null,
+        // Setting up unique FPS.
+        this._fps = 30;
 
-        /**
-         * Track certain statistics about the process.
-         * @type {Object}
-         */
-        _tracking: {
-            /**
-             * Current FPS, stored.
-             * @type {Number}
-             */
+        // Setting up unique tracking ID.
+        this._ticker = null;
+
+        // Setting up unique tracking data.
+        this._tracking = {
             currentFps: 0,
-
-            /**
-             * Current frame number, to be passed in the callbacks.
-             * @type {Number}
-             */
             currentFrame: 0,
-
-            /**
-             * Last execution time, stored.
-             * @type {Number}
-             */
             executionTime: 0,
-
-            /**
-             * Last tick start epoch, stored.
-             * @type {Number}
-             */
             lastTickStart: 0
-        },
+        };
+    };
+
+    ticker.prototype = {
 
         /**
          * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
@@ -73,37 +55,12 @@ define(function () {
         },
 
         /**
-         * User defined function to be run whenever their is a tick.
-         * @private
-         * @type {Function}
-         */
-        _callback: null,
-
-        /**
-         * Set the callback
-         * @param {Function} callback - User defined function to run on tick.
-         * @return {Object} Ticker parent object
-         */
-        setCallback: function (callback) {
-            if (typeof callback === 'function') {
-                this._callback = callback;
-            }
-            return this;
-        },
-
-        /**
-         * Number of frames per second.
-         * @type {Number}
-         */
-        _fps: 30,
-
-        /**
          * [setFps description]
          * @param {Number} fps - The Frames Per Second rate required.
          * @return {Object} Ticker parent object
          */
         setFps: function (fps) {
-            if (!isNaN(fps) && fps > 0) {
+            if (!isNaN(fps) && fps > 0 && fps <= 1000) {
                 this._fps = fps;
             }
             return this;
