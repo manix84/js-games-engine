@@ -69,7 +69,7 @@ define(function () {
 
                 that._tracking.executionTime = ((start - that._tracking.lastTickStart) / 1000);
 
-            }, (1000 / this.fps));
+            }, (1000 / this._fps));
         },
 
         /**
