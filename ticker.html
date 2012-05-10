@@ -40,7 +40,8 @@
             lots: []
           }
           window.ticker = ticker;
-          ticker.start(function (obj) {
+
+          ticker.setCallback(function (obj) {
             var fps = Math.round(obj.fps);
             stats.highest = (stats.highest > fps ? stats.highest : fps);
             stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
@@ -64,7 +65,7 @@
             //     lots: []
             //   }
             // }
-          }).stop();
+          });
 
           $('#start_fps_tracking').click(function () {
             ticker.start();
@@ -137,7 +138,7 @@
   lots: []
 }
 window.ticker = ticker;
-ticker.start(function (obj) {
+ticker.setCallback(function (obj) {
   var fps = Math.round(obj.fps);
   stats.highest = (stats.highest > fps ? stats.highest : fps);
   stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
