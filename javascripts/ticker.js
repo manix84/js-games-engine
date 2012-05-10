@@ -88,6 +88,7 @@ define(function () {
             if (typeof callback === 'function') {
                 this._callback = callback;
             }
+            return this;
         },
 
         /**
