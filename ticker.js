@@ -5,48 +5,25 @@ define(function () {
      * @type {Object}
      */
     var ticker = function (callback) {
+        // Collecting and saving unique callback.
         this._callback = callback;
+
+        // Setting up unique FPS.
         this._fps = 30;
+
+        // Setting up unique tracking ID.
+        this._ticker = null;
+
+        // Setting up unique tracking data.
+        this._tracking = {
+            currentFps: 0,
+            currentFrame: 0,
+            executionTime: 0,
+            lastTickStart: 0
+        };
     };
 
     ticker.prototype = {
-
-        /**
-         * Set Interval's unique id, so that it can be manipulated throughout the code.
-         * @private
-         * @type {Number}
-         */
-        _ticker: null,
-
-        /**
-         * Track certain statistics about the process.
-         * @type {Object}
-         */
-        _tracking: {
-            /**
-             * Current FPS, stored.
-             * @type {Number}
-             */
-            currentFps: 0,
-
-            /**
-             * Current frame number, to be passed in the callbacks.
-             * @type {Number}
-             */
-            currentFrame: 0,
-
-            /**
-             * Last execution time, stored.
-             * @type {Number}
-             */
-            executionTime: 0,
-
-            /**
-             * Last tick start epoch, stored.
-             * @type {Number}
-             */
-            lastTickStart: 0
-        },
 
         /**
          * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
