@@ -14,31 +14,32 @@ define(function () {
         _ticker: null,
 
         /**
-         * User defined function to be run whenever their is a tick.
-         * @private
-         * @type {Function}
-         */
-        _callback: null,
-
-        /**
-         * Number of frames per second.
-         * @type {Number}
-         */
-        fps: 30,
-
-        /**
          * Track certain statistics about the process.
          * @type {Object}
          */
         _tracking: {
             /**
-             * Current frame number, to be passed in the callbacks.
-             * @private
+             * Current FPS, stored.
              * @type {Number}
              */
             currentFps: 0,
+
+            /**
+             * Current frame number, to be passed in the callbacks.
+             * @type {Number}
+             */
             currentFrame: 0,
+
+            /**
+             * Last execution time, stored.
+             * @type {Number}
+             */
             executionTime: 0,
+
+            /**
+             * Last tick start epoch, stored.
+             * @type {Number}
+             */
             lastTickStart: 0
         },
 
@@ -72,16 +73,47 @@ define(function () {
         },
 
         /**
-         * Start the ticker, and anything attached too it.
-         * @param {Function} [callback] - User defined function to run on tick. This is only optional if a callback has
-         *                                already been set.
+         * User defined function to be run whenever their is a tick.
+         * @private
+         * @type {Function}
+         */
+        _callback: null,
+
+        /**
+         * Set the callback
+         * @param {Function} callback - User defined function to run on tick.
          * @return {Object} Ticker parent object
          */
-        start: function (callback) {
-            if (callback) {
+        setCallback: function (callback) {
+            if (typeof callback === 'function') {
                 this._callback = callback;
-                this._currentFrame = 0;
-            } else if (!this._callback) {
+            }
+        },
+
+        /**
+         * Number of frames per second.
+         * @type {Number}
+         */
+        _fps: 30,
+
+        /**
+         * [setFps description]
+         * @param {Number} fps - The Frames Per Second rate required.
+         * @return {Object} Ticker parent object
+         */
+        setFps: function (fps) {
+            if (!isNaN(fps) && fps > 0) {
+                this._fps = fps;
+            }
+            return this;
+        },
+
+        /**
+         * Start the ticker, and anything attached too it.
+         * @return {Object} Ticker parent object
+         */
+        start: function () {
+            if (!this._callback) {
                 throw new Error('No callback set.');
             } else if (!!this._ticker) {
                 throw new Error('Ticker already running.');
