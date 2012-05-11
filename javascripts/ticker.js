@@ -1,8 +1,10 @@
 define(function () {
+
     /**
      * Games Engine v1.0 - Ticker
      * @author  Rob Taylor [manix84@gmail.com]
-     * @type {Object}
+     * @return {Object} Ticker parent object
+     * @constructor
      */
     var ticker = function (callback) {
         // Collecting and saving unique callback.
@@ -21,6 +23,8 @@ define(function () {
             executionTime: 0,
             lastTickStart: 0
         };
+
+        return this;
     };
 
     ticker.prototype = {
