@@ -68,7 +68,7 @@
                             },
                             that = this;
                             this.fps_ticker = new Ticker(function (obj) {
-                                var fps = Math.round(obj.fps);
+                                var fps = Math.round(obj.actualFps);
                                 stats.highest = (stats.highest > fps ? stats.highest : fps);
                                 stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
                                 stats.stack.push(fps);
@@ -136,7 +136,7 @@
         },
         that = this;
         this.fps_ticker = new Ticker(function (obj) {
-            var fps = Math.round(obj.fps);
+            var fps = Math.round(obj.actualFps);
             stats.highest = (stats.highest > fps ? stats.highest : fps);
             stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
             stats.stack.push(fps);
@@ -197,7 +197,7 @@
                                 }
 
                                 $('#ball').css('left', i);
-                                $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
+                                $('#animation_fps').text(Math.round(obj.actualFps) + ' FPS');
                             }, {
                                 fps: 60
                             });
@@ -246,7 +246,7 @@
             }
 
             $('#ball').css('left', i);
-            $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
+            $('#animation_fps').text(Math.round(obj.actualFps) + ' FPS');
         }, {
             fps: 60
         });
