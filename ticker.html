@@ -64,8 +64,7 @@
                                 highest: 0,
                                 lowest: 9999,
                                 average: 0,
-                                stack: [],
-                                count: 100
+                                stack: []
                             },
                             that = this;
                             this.fps_ticker = new Ticker(function (obj) {
@@ -134,7 +133,8 @@
             lowest: 9999,
             average: 0,
             stack: []
-        }
+        },
+        that = this;
         this.fps_ticker = new Ticker(function (obj) {
             var fps = Math.round(obj.fps);
             stats.highest = (stats.highest > fps ? stats.highest : fps);
@@ -152,6 +152,26 @@
             document.getElementById('lowest').innerHTML = stats.lowest;
             document.getElementById('average').innerHTML = stats.average;
         });
+
+        $('#start_fps_tracking').click(function () {
+            that.fps_ticker.start()
+        });
+        $('#stop_fps_tracking').click(function () {
+            that.fps_ticker.stop()
+        });
+        $('#clear_fps_tracking').click(function () {
+            that.fps_ticker.stop();
+            stats = {
+                highest: 0,
+                lowest: 9999,
+                average: 0,
+                stack: []
+            }
+            document.getElementById('fps').innerHTML = '';
+            document.getElementById('highest').innerHTML = '';
+            document.getElementById('lowest').innerHTML = '';
+            document.getElementById('average').innerHTML = '';
+        });
     });
 });</pre>
 
@@ -163,7 +183,7 @@
                             var i = 0
                                 that = this;
                             this.animation_fps = new Ticker(function (obj) {
-                                if (i > $('#animation_container').width() - 20) {
+                                if (i > $('#animation_container').width() - 30) {
                                     i = 0;
                                 }
                                 i = i + 10;
