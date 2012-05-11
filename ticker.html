@@ -180,13 +180,22 @@
                         'ticker'
                     ], function (Ticker) {
                         $(document).ready(function () {
-                            var i = 0
+                            var i = 0,
+                                go = 'left';
                                 that = this;
                             this.animation_fps = new Ticker(function (obj) {
-                                if (i > $('#animation_container').width() - 25) {
-                                    i = 0;
+                                if (i > $('#animation_container').width() - 30) {
+                                    go = 'right';
+                                } else if (i <= 10) {
+                                    go = 'left';
                                 }
-                                i = i + 5;
+
+                                if (go === 'left') {
+                                    i = i + 10;
+                                } else {
+                                    i = i - 10;
+                                }
+
                                 $('#ball').css('left', i);
                                 $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
                             }, {
@@ -220,13 +229,22 @@
     'ticker'
 ], function (Ticker) {
     $(document).ready(function () {
-        var i = 0
+        var i = 0,
+            go = 'left';
             that = this;
         this.animation_fps = new Ticker(function (obj) {
-            if (i > $('#animation_container').width() - 25) {
-                i = 0;
+            if (i > $('#animation_container').width() - 30) {
+                go = 'right';
+            } else if (i <= 10) {
+                go = 'left';
             }
-            i = i + 5;
+
+            if (go === 'left') {
+                i = i + 10;
+            } else {
+                i = i - 10;
+            }
+
             $('#ball').css('left', i);
             $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
         }, {
