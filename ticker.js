@@ -32,7 +32,9 @@ define(function () {
 
         // Setting up unique tracking data.
         this._tracking = {
-            currentFps: 0,
+            tick: null,
+            tickCount: 0,
+            currentFps: options_default.fps,
             currentFrame: 0,
             executionTime: 0,
             lastTickStart: 0
@@ -55,11 +57,10 @@ define(function () {
 
             this._ticker = window.setTimeout(function () {
                 that._tick();
-                start = new Date().getTime();
-                that._tracking.currentFps = (1000 / (start - that._tracking.lastTickStart));
-                that._tracking.lastTickStart = start;
                 that._tracking.currentFrame++;
+                that._tracking.tickCount++;
 
+                start = new Date().getTime();
                 that._callback({
                     fps: that._tracking.currentFps,
                     frame: that._tracking.currentFrame,
@@ -67,9 +68,18 @@ define(function () {
                 });
                 end = new Date().getTime();
 
-                that._tracking.executionTime = ((start - that._tracking.lastTickStart) / 1000);
+                that._tracking.executionTime = ((end - start) / 1000);
 
             }, (1000 / this._fps));
+        },
+
+        _tickTracking: function () {
+            var that = this;
+            this._tracking.tick = window.setTimeout(function () {
+                that._tickTracking();
+                that._tracking.currentFps = that._tracking.tickCount;
+                that._tracking.tickCount = 0;
+            }, 1000);
         },
 
         /**
@@ -85,6 +95,7 @@ define(function () {
 
             this._tracking.lastTickStart = new Date().getTime();
             this._tick();
+            this._tickTracking();
             return this;
         },
 
