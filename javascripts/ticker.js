@@ -91,7 +91,6 @@ define(function () {
                 throw new Error('Cannot start ticker: It\'s already running.');
             }
 
-            this._tracking.lastTickStart = new Date().getTime();
             this._tick();
             this._tickTracking();
             return this;
@@ -105,6 +104,7 @@ define(function () {
             if (!!this._ticker) {
                 window.clearTimeout(this._ticker);
                 delete this._ticker;
+                window.clearTimeout(this._tickerTracking);
                 delete this._tickerTracking;
             } else {
                 throw new Error('Cannot stop ticker: It isn\'t running.');
