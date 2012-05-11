@@ -183,13 +183,13 @@
                             var i = 0
                                 that = this;
                             this.animation_fps = new Ticker(function (obj) {
-                                if (i > $('#animation_container').width() - 30) {
+                                if (i > $('#animation_container').width() - 25) {
                                     i = 0;
                                 }
-                                i = i + 10;
+                                i = i + 5;
                                 $('#ball').css('left', i);
                                 $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
-                            });
+                            }).setFps(60);
 
                             $('#start_animation').click(function () {
                                 that.animation_fps.start()
