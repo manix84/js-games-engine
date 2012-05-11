@@ -2,89 +2,101 @@ define(function () {
     /**
      * Games Engine v1.0 - Sound
      * @author  Rob Taylor [manix84@gmail.com]
-     * @type {Object}
+     * @param {String} url - Sets the audio url.
+     * @param {Object} options - Options for the current sound.
+     * @return {Object} Ticker parent object
+     * @constructor
      */
-    var sound = {
-        /**
-         * A containing list of all available sound effects.
-         * @type {Object}
-         */
-        _list: {},
+    var Sound = function (url, options) {
+        var options_default = {
+                loop: false
+            },
+            property;
+
+        if (typeof url === 'undefined') {
+            throw new Error('You must set an audio url.');
+        }
+
+        for (property in options) {
+            if (options.hasOwnProperty(property)) {
+                options_default[property] = options[property];
+            }
+        }
+
+        this._file = new Audio(url);
+        this._file.load();
+        this._file.preload = 'auto';
+        this._file.controls = false;
+
+        this._file.addEventListener('canplay', function () {
+            this.prototype = {
+                canplay: true
+            };
+        }, true);
+
+        return this;
+    };
+
+    Sound.prototype = {
 
         /**
          * Prevents audio from playing.
          * @type {Boolean}
          */
-        mute: false,
+        _isMuted: false,
 
         /**
-         * Add an audio tag to the page to be played.
-         * @param {String} name - Assigns a name to the audio tag. This is used as a reference for playing, etc.
-         * @param {String} url - Sets the audio url.
+         * Mute this sound.
+         * @param  {Boolean} [mute] - Mute current sound? If not set, will toggle.
+         * @return {Object} Sound parent object
          */
-        add: function (name, url) {
-            var audioElement = new Audio(url);
-
-            audioElement.addEventListener('canplay', function () {
-                this.prototype = {
-                    canPlay: true
-                };
-            }, true);
-
-            audioElement.load();
-            audioElement.preload = 'auto';
-            audioElement.controls = false;
-
-            this._list[name] = audioElement;
+        mute: function (mute) {
+            if (typeof mute === 'undefined') {
+                this._isMuted = !this._isMuted;
+            } else {
+                this._isMuted = !!mute;
+            }
+            return this;
         },
 
         /**
-         * [play description]
-         * @param  {String} name - The audio reference name. See: engine.audio.add
-         * @param  {Boolean} loop - Should the audio item play in a loop.
+         * Play sound
+         * @return {Object} Sound parent object
          */
-        play: function (name, loop) {
-            var audioElement,
-                that = this;
-
-            if (!!this._list[name]) {
-                this._list[name].loop = loop || false;
-
-                if (!this.mute) {
-                    if (!this._list[name].canPlay) {
-                        this._list[name].addEventListener('canplay', function () {
-                            this.play();
-                        }, false);
-                    } else {
-                        this._list[name].play();
-                    }
+        play: function () {
+            if (!this._isMuted) {
+                if (!this._file.canPlay) {
+                    this._file.addEventListener('canplay', function () {
+                        this.play();
+                    }, false);
+                } else {
+                    this._file.play();
                 }
             }
+            return this;
         },
 
         /**
          * Pause audio file.
-         * @param  {String} name - The audio reference name. See: engine.audio.add
+         * @return {Object} Sound parent object
          */
         pause: function (name) {
-            if (!!this._list[name]) {
-                this._list[name].pause();
-            }
+            this._file.pause();
+            return this;
         },
 
         /**
          * Stop and remove the sound file from play and pause.
-         * @param  {String} name - The audio reference name. See: engine.audio.add
+         * @return {Object} Sound parent object
          */
-        stop: function (name) {
-            if (this._list[name]) {
-                this._list[name].pause();
-                if (this._list[name].currentTime > 0) {
-                    this._list[name].currentTime = 0;
-                }
+        stop: function () {
+            this._file.pause();
+            if (this._file.currentTime > 0) {
+                this._file.currentTime = 0;
             }
+            return this;
         }
     };
 
-    return sound;
+    return Sound;
 });
