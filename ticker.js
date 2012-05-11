@@ -26,13 +26,8 @@ define(function () {
         // Setting up unique FPS.
         this._fps = options_default.fps;
 
-
-        // Setting up unique tracking ID.
-        this._ticker = null;
-
         // Setting up unique tracking data.
         this._tracking = {
-            tick: null,
             tickCount: 0,
             currentFps: options_default.fps,
             currentFrame: 0,
@@ -49,7 +44,6 @@ define(function () {
          * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
          * @private
          * @todo Need to look into adding a skip-frame ability.
-         * @todo Should add a warning if FPS drops below requirements.
          */
         _tick: function () {
             var that = this,
@@ -62,9 +56,10 @@ define(function () {
 
                 start = new Date().getTime();
                 that._callback({
-                    fps: that._tracking.currentFps,
+                    expectedFps: that._fps,
+                    actualFps: that._tracking.currentFps,
                     frame: that._tracking.currentFrame,
-                    prevExecutionTime: that._tracking.executionTime
+                    executionTime: that._tracking.executionTime
                 });
                 end = new Date().getTime();
 
@@ -73,9 +68,12 @@ define(function () {
             }, (1000 / this._fps));
         },
 
+        /**
+         * Ticker interval to track the fps.
+         */
         _tickTracking: function () {
             var that = this;
-            this._tracking.tick = window.setTimeout(function () {
+            this._tickerTracking = window.setTimeout(function () {
                 that._tickTracking();
                 that._tracking.currentFps = that._tracking.tickCount;
                 that._tracking.tickCount = 0;
@@ -104,13 +102,14 @@ define(function () {
          * @return {Object} Ticker parent object
          */
         stop: function () {
-            if (this._ticker) {
+            if (!!this._ticker) {
                 window.clearTimeout(this._ticker);
-                this._ticker = null;
-                return this;
+                delete this._ticker;
+                delete this._tickerTracking;
             } else {
                 throw new Error('Cannot stop ticker: It isn\'t running.');
             }
+            return this;
         }
     };
 
