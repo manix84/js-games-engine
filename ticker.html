@@ -189,7 +189,9 @@
                                 i = i + 5;
                                 $('#ball').css('left', i);
                                 $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
-                            }).setFps(60);
+                            }, {
+                                fps: 60
+                            });
 
                             $('#start_animation').click(function () {
                                 that.animation_fps.start()
@@ -227,7 +229,9 @@
             i = i + 5;
             $('#ball').css('left', i);
             $('#animation_fps').text(Math.round(obj.fps) + ' FPS');
-        }).setFps(60);
+        }, {
+            fps: 60
+        });
 
         $('#start_animation').click(function () {
             that.animation_fps.start()
