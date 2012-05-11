@@ -3,15 +3,29 @@ define(function () {
     /**
      * Games Engine v1.0 - Ticker
      * @author  Rob Taylor [manix84@gmail.com]
+     * @param {Function} callback - User defined function to run on tick.
+     * @param {Object} options - Options for the current ticker.
      * @return {Object} Ticker parent object
      * @constructor
      */
-    var ticker = function (callback) {
+    var ticker = function (callback, options) {
+        var options_default = {
+                fps: 30
+            },
+            property;
+
         // Collecting and saving unique callback.
         this._callback = callback;
 
+        for (property in options) {
+            if (options.hasOwnProperty(property)) {
+                options_default[property] = options[property];
+            }
+        }
+
         // Setting up unique FPS.
-        this._fps = 30;
+        this._fps = options_default.fps;
+
 
         // Setting up unique tracking ID.
         this._ticker = null;
@@ -59,26 +73,14 @@ define(function () {
         },
 
         /**
-         * [setFps description]
-         * @param {Number} fps - The Frames Per Second rate required.
-         * @return {Object} Ticker parent object
-         */
-        setFps: function (fps) {
-            if (!isNaN(fps) && fps > 0 && fps <= 1000) {
-                this._fps = fps;
-            }
-            return this;
-        },
-
-        /**
          * Start the ticker, and anything attached too it.
          * @return {Object} Ticker parent object
          */
         start: function () {
             if (!this._callback) {
-                throw new Error('No callback set.');
+                throw new Error('Cannot start ticker: No callback set.');
             } else if (!!this._ticker) {
-                throw new Error('Ticker already running.');
+                throw new Error('Cannot start ticker: It\'s already running.');
             }
 
             this._tracking.lastTickStart = new Date().getTime();
@@ -91,9 +93,13 @@ define(function () {
          * @return {Object} Ticker parent object
          */
         stop: function () {
-            window.clearTimeout(this._ticker);
-            this._ticker = null;
-            return this;
+            if (this._ticker) {
+                window.clearTimeout(this._ticker);
+                this._ticker = null;
+                return this;
+            } else {
+                throw new Error('Cannot stop ticker: It isn\'t running.');
+            }
         }
     };
 
