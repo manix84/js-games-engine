@@ -8,7 +8,7 @@ define(function () {
      * @return {Object} Ticker parent object
      * @constructor
      */
-    var ticker = function (callback, options) {
+    var Ticker = function (callback, options) {
         var options_default = {
                 fps: 30
             },
@@ -38,7 +38,7 @@ define(function () {
         return this;
     };
 
-    ticker.prototype = {
+    Ticker.prototype = {
 
         /**
          * Self perpetuating tick method. Can only be stopped with the stop command. Designed to stop callback stacking.
@@ -113,5 +113,5 @@ define(function () {
         }
     };
 
-    return ticker;
+    return Ticker;
 });
