@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-        <title>Js-games-engine by manix84 &gt; Ticker Module Example</title>
+        <title>Js-games-engine by manix84 &gt; Sound Module Example</title>
 
         <link rel="stylesheet" href="stylesheets/styles.css">
         <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -30,6 +30,22 @@
                 baseUrl: 'javascripts/'
             });
         </script>
+        <style>
+            button {
+                padding-bottom: 3px;
+                padding-left: 6px;
+                padding-right: 6px;
+                padding-top: 2px;
+                margin: 0;
+
+                height: 24px;
+                min-width: 27px;
+                line-height: 20px;
+            }
+            #music_pause {
+                width: 35px;
+            }
+        </style>
     </head>
     <body>
         <div id="header">
@@ -46,7 +62,7 @@
                 <div id="title">
                     <h1>Js-games-engine</h1>
                     <p>Simple JavaScript games engine.</p>
-                    <h2>Ticker Module Example</h2>
+                    <h2>Sound Module Example</h2>
                     <hr>
                     <span class="credits left">Project maintained by <a href="https://github.com/manix84">manix84</a></span>
                     <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
@@ -57,133 +73,84 @@
 
                 <script>
                     require([
-                        'ticker'
-                    ], function (Ticker) {
-                        $(document).ready(function () {
-                            var stats = {
-                                highest: 0,
-                                lowest: 9999,
-                                average: 0,
-                                stack: []
-                            },
-                            that = this;
-                            this.fps_ticker = new Ticker(function (obj) {
-                                var fps = Math.round(obj.actualFps);
-                                stats.highest = (stats.highest > fps ? stats.highest : fps);
-                                stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
-                                stats.stack.push(fps);
+                        'Sound'
+                    ], function (Sound) {
+                        var that = this;
+                        this._sound = new Sound('audio/soundDemo.ogg');
 
-                                stats.average = 0;
-                                for (var i = 0; i < stats.stack.length; i++) {
-                                    stats.average += stats.stack[i];
-                                }
-                                stats.average = Math.round(stats.average / stats.stack.length);
-
-                                document.getElementById('fps').innerHTML = fps;
-                                document.getElementById('highest').innerHTML = stats.highest;
-                                document.getElementById('lowest').innerHTML = stats.lowest;
-                                document.getElementById('average').innerHTML = stats.average;
-                            });
-
-                            $('#start_fps_tracking').click(function () {
-                                that.fps_ticker.start()
-                            });
-                            $('#stop_fps_tracking').click(function () {
-                                that.fps_ticker.stop()
-                            });
-                            $('#clear_fps_tracking').click(function () {
-                                that.fps_ticker.stop();
-                                stats = {
-                                    highest: 0,
-                                    lowest: 9999,
-                                    average: 0,
-                                    stack: []
-                                }
-                                document.getElementById('fps').innerHTML = '';
-                                document.getElementById('highest').innerHTML = '';
-                                document.getElementById('lowest').innerHTML = '';
-                                document.getElementById('average').innerHTML = '';
-                            });
+                        $('#sound_play').click(function () {
+                            that._sound.play();
                         });
                     });
                 </script>
-                <h3>Basic Framerate Test</h3>
+                <h3>Basic Sound Effect</h3>
                 <h4>Code in Action:</h4>
                 <div>
-                    <div>Current FPS: <span id='fps'></span></div>
-                    <div>Highest FPS: <span id='highest'></span></div>
-                    <div>Lowest FPS: <span id='lowest'></span></div>
-                    <div>Average FPS: <span id='average'></span></div>
-                </div>
-                <br />
-                <div>
-                    <button id='start_fps_tracking'>Start</button>
-                    <button id='stop_fps_tracking'>Stop</button>
-                    <button id='clear_fps_tracking'>Clear</button>
+                    <button id='sound_play' title='Play'>&#x25BA;</button>
                 </div>
                 <br /><br />
 
                 <h4>Example Code:</h4>
                 <pre class='prettyprint prettyprinted' id='javascript'>require([
-    'ticker'
-], function (Ticker) {
-    $(document).ready(function () {
-        var stats = {
-            highest: 0,
-            lowest: 9999,
-            average: 0,
-            stack: []
-        },
-        that = this;
-        this.fps_ticker = new Ticker(function (obj) {
-            var fps = Math.round(obj.actualFps);
-            stats.highest = (stats.highest > fps ? stats.highest : fps);
-            stats.lowest = (stats.lowest < fps ? stats.lowest : fps);
-            stats.stack.push(fps);
+    'Sound'
+], function (Sound) {
+    var that = this;
+    this._sound = new Sound('audio/soundDemo.ogg');
 
-            stats.average = 0;
-            for (var i = 0; i < stats.stack.length; i++) {
-                stats.average += stats.stack[i];
-            }
-            stats.average = Math.round(stats.average / stats.stack.length);
-
-            document.getElementById('fps').innerHTML = fps;
-            document.getElementById('highest').innerHTML = stats.highest;
-            document.getElementById('lowest').innerHTML = stats.lowest;
-            document.getElementById('average').innerHTML = stats.average;
-        });
-
-        $('#start_fps_tracking').click(function () {
-            that.fps_ticker.start()
-        });
-        $('#stop_fps_tracking').click(function () {
-            that.fps_ticker.stop()
-        });
-        $('#clear_fps_tracking').click(function () {
-            that.fps_ticker.stop();
-            stats = {
-                highest: 0,
-                lowest: 9999,
-                average: 0,
-                stack: []
-            }
-            document.getElementById('fps').innerHTML = '';
-            document.getElementById('highest').innerHTML = '';
-            document.getElementById('lowest').innerHTML = '';
-            document.getElementById('average').innerHTML = '';
-        });
+    $('#sound_play').click(function () {
+        that._sound.play();
     });
 });</pre>
 
                 <script>
-                    require ([
-                        'sound'
-                    ], function (sound) {
-                        $(document).ready(function () {
-                            sound.add('')
+                    require([
+                        'Sound'
+                    ], function (Sound) {
+                        var that = this;
+                        this._music = new Sound('audio/musicDemo.wav', {
+                            loop: true
+                        });
+
+                        $('#music_play').click(function () {
+                            that._music.play();
+                        });
+                        $('#music_pause').click(function () {
+                            that._music.pause();
+                        });
+                        $('#music_stop').click(function () {
+                            that._music.stop();
                         });
                     });
                 </script>
+                <h3>Music Loop</h3>
+                <h4>Code in Action:</h4>
+                <div>
+                    <button id='music_play' title='Play'>&#x25BA;</button>
+                    <button id='music_pause' title='Pause'>&#x258C;&#x258C;</button>
+                    <button id='music_stop' title='Stop'>&#x2588;</button>
+                    <div class='grey'>Music clip from: <a href='http://www.partnersinrhyme.com/'>PartnersInRhyme.com</a></div>
+                </div>
+                <br /><br />
+
+                <h4>Example Code:</h4>
+                <pre class='prettyprint prettyprinted' id='javascript'>require([
+    'Sound'
+], function (Sound) {
+    var that = this;
+    this._music = new Sound('audio/musicDemo.wav', {
+        loop: true
+    });
+
+    $('#music_play').click(function () {
+        that._music.play();
+    });
+    $('#music_pause').click(function () {
+        that._music.pause();
+    });
+    $('#music_stop').click(function () {
+        that._music.stop();
+    });
+});</pre>
             </section>
 
         </div>

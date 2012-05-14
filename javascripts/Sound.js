@@ -25,6 +25,7 @@ define(function () {
 
         this._file = new Audio(url);
         this._file.load();
+        this._file.loop = !!options_default.loop;
         this._file.preload = 'auto';
         this._file.autoplay = false;
         this._file.controls = false;
