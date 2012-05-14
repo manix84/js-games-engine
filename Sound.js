@@ -26,13 +26,10 @@ define(function () {
         this._file = new Audio(url);
         this._file.load();
         this._file.preload = 'auto';
+        this._file.autoplay = false;
         this._file.controls = false;
 
-        this._file.addEventListener('canplay', function () {
-            this.prototype = {
-                canplay: true
-            };
-        }, true);
+        this._file.addEventListener('canplay', this._canPlayListener, true);
 
         return this;
     };
@@ -44,6 +41,10 @@ define(function () {
          * @type {Boolean}
          */
         _isMuted: false,
+
+        _canPlayListener: function () {
+            this.canPlay = true;
+        },
 
         /**
          * Mute this sound.
@@ -95,6 +96,12 @@ define(function () {
                 this._file.currentTime = 0;
             }
             return this;
+        },
+
+        destroy: function () {
+            this.stop();
+            this._file.removeEventListener('canplay', this._canPlayListener, true);
+            delete this._file;
         }
     };
 
