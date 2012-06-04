@@ -2,19 +2,22 @@ define(function () {
     /**
      * Games Engine v1.0 - Sound
      * @author  Rob Taylor [manix84@gmail.com]
-     * @param {String} url - Sets the audio url.
+     * @param {String|Array} urls - Sets the audio source urls.
      * @param {Object} options - Options for the current sound.
      * @return {Object} Ticker parent object
      * @constructor
      */
-    var Sound = function (url, options) {
+    var Sound = function (urls, options) {
         var options_default = {
                 loop: false
             },
-            property;
+            i = 0,
+            property, source;
 
-        if (typeof url === 'undefined') {
+        if (typeof urls === 'undefined') {
             throw new Error('You must set an audio url.');
+        } else if (typeof urls === 'string') {
+            urls = [urls];
         }
 
         for (property in options) {
@@ -23,14 +26,22 @@ define(function () {
             }
         }
 
-        this._file = new Audio(url);
-        this._file.load();
-        this._file.loop = !!options_default.loop;
-        this._file.preload = 'auto';
-        this._file.autoplay = false;
-        this._file.controls = false;
+        this._theSound = new Audio();
+        for (; i < urls.length; i++) {
+            window.console.log('Adding source:', urls[i]);
+            source = document.createElement('source');
+            source.src = urls[i];
 
-        this._file.addEventListener('canplay', this._canPlayListener, true);
+            this._theSound.appendChild(source);
+        }
+
+        this._theSound.load();
+        this._theSound.loop = !!options_default.loop;
+        this._theSound.preload = 'auto';
+        this._theSound.autoplay = false;
+        this._theSound.controls = false;
+
+        this._theSound.addEventListener('canplay', this._canPlayListener, true);
 
         return this;
     };
@@ -67,12 +78,12 @@ define(function () {
          */
         play: function () {
             if (!this._isMuted) {
-                if (!this._file.canPlay) {
-                    this._file.addEventListener('canplay', function () {
+                if (!this._theSound.canPlay) {
+                    this._theSound.addEventListener('canplay', function () {
                         this.play();
                     }, false);
                 } else {
-                    this._file.play();
+                    this._theSound.play();
                 }
             }
             return this;
@@ -83,7 +94,7 @@ define(function () {
          * @return {Object} Sound parent object
          */
         pause: function (name) {
-            this._file.pause();
+            this._theSound.pause();
             return this;
         },
 
@@ -92,17 +103,17 @@ define(function () {
          * @return {Object} Sound parent object
          */
         stop: function () {
-            this._file.pause();
-            if (this._file.currentTime > 0) {
-                this._file.currentTime = 0;
+            this._theSound.pause();
+            if (this._theSound.currentTime > 0) {
+                this._theSound.currentTime = 0;
             }
             return this;
         },
 
         destroy: function () {
             this.stop();
-            this._file.removeEventListener('canplay', this._canPlayListener, true);
-            delete this._file;
+            this._theSound.removeEventListener('canplay', this._canPlayListener, true);
+            delete this._theSound;
         }
     };
 
