@@ -9,6 +9,10 @@ define(function () {
      * @constructor
      */
     var Ticker = function (callback, options) {
+        if (!this instanceof Ticker) {
+            return new Ticker(callback, options);
+        }
+
         var options_default = {
                 fps: 30
             },
@@ -22,6 +26,12 @@ define(function () {
                 options_default[property] = options[property];
             }
         }
+
+        this._useWebWorker = false;
+        if (!!Worker) {
+            this._useWebWorker = true;
+        }
+
 
         // Setting up unique FPS.
         this._fps = options_default.fps;
@@ -47,7 +57,7 @@ define(function () {
          */
         _tick: function () {
             var that = this,
-                start, end, lastTickStart;
+                start, end, lastTickStart, worker;
 
             this._ticker = window.setTimeout(function () {
                 that._tick();
@@ -91,8 +101,17 @@ define(function () {
                 throw new Error('Cannot start ticker: It\'s already running.');
             }
 
-            this._tick();
-            this._tickTracking();
+            if (!!this._useWebWorker) {
+                this._ticker = new Worker('Ticker/worker.js');
+                this._ticker.pushMessage({
+                    state: 'start',
+                    callback: this._callback,
+                    fps: this._fps
+                });
+            } else {
+                this._tick();
+                this._tickTracking();
+            }
             return this;
         },
 
@@ -102,10 +121,16 @@ define(function () {
          */
         stop: function () {
             if (!!this._ticker) {
-                window.clearTimeout(this._ticker);
-                delete this._ticker;
-                window.clearTimeout(this._tickerTracking);
-                delete this._tickerTracking;
+                if (!!this._useWebWorker) {
+                    this._ticker.pushMessage({
+                        state: 'stop'
+                    });
+                } else {
+                    window.clearTimeout(this._ticker);
+                    delete this._ticker;
+                    window.clearTimeout(this._tickerTracking);
+                    delete this._tickerTracking;
+                }
             } else {
                 throw new Error('Cannot stop ticker: It isn\'t running.');
             }
