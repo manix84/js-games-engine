@@ -29,7 +29,13 @@ define(function () {
 
     Graphics.prototype = {
         _options: {
-            supportError: "<div style='padding:3px;background:#EBEBEB'><img src='images/supportError.png' style='position:relative;margin:7px' /> <p>Looks like your browser doesn't support the HTML5 canvas.</p> <p>Please consider updating to a more modern browser such as <a href=''>Google Chrome</a> or <a href=''>Mozilla FireFox</a>.</p>"
+            supportError: (
+                "<div style='padding:3px;background:#EBEBEB'>" +
+                    "<img src='images/supportError.png' style='position:relative;margin:7px' />" +
+                    "<p>Looks like your browser doesn't support the HTML5 canvas.</p>" +
+                    "<p>Please consider updating to a more modern browser such as <a href=''>Google Chrome</a> or <a href=''>Mozilla FireFox</a>.</p>" +
+                "</div>"
+            )
         },
 
         clear: function () {
