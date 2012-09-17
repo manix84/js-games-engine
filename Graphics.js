@@ -3,14 +3,14 @@ define(function () {
     /**
      * Games Engine v1.0 - Graphics
      * @author  Rob Taylor [manix84@gmail.com]
-     * @param {String} domId - Dom element ID for the canvas
+     * @param {String} element - Dom element object you wish to put the canvas inside of.
      * @param {Object} [options] - Options for the current ticker. Available options include:
      * @return {Object} Grapics parent object
      * @constructor
      */
     var Graphics = function (element, options) {
         if (!element || typeof element !== 'object') {
-            throw new Error('Graphics error: Element missing.');
+            throw new Error('Graphics error: Container element not supplied.');
         }
         var property = null;
 
