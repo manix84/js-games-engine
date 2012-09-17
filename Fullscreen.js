@@ -29,10 +29,9 @@ define(function () {
         },
 
         enter: function () {
-            var de = document.documentElement,
-                func = de.requestFullScreen ||
-                    de.mozRequestFullScreen ||
-                    de.webkitRequestFullScreen ||
+            var func = document.documentElement.requestFullScreen ||
+                    document.documentElement.mozRequestFullScreen ||
+                    document.documentElement.webkitRequestFullScreen ||
                     function () {};
 
             func(Element.ALLOW_KEYBOARD_INPUT);
