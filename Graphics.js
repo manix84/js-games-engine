@@ -8,9 +8,9 @@ define(function () {
      * @return {Object} Grapics parent object
      * @constructor
      */
-    var Graphics = function (domId, options) {
-        if (!domId || typeof domId !== 'string') {
-            throw new Error('Graphics error: DomId missing.');
+    var Graphics = function (element, options) {
+        if (!element || typeof element !== 'object') {
+            throw new Error('Graphics error: Element missing.');
         }
         var property = null;
 
@@ -20,12 +20,16 @@ define(function () {
             }
         }
 
-        this._canvas = document.getElementById(domId);
+        this._canvas = document.createElement('canvas');
+        element.appendChild(this._canvas);
+
+        this._canvas.innerHTML = this._options.supportError;
         this._canvasContext = this._canvas.getContext('2d');
     };
 
     Graphics.prototype = {
         _options: {
+            supportError: "<div style='padding:3px;background:#EBEBEB'><img src='images/supportError.png' style='position:relative;margin:7px' /> <p>Looks like your browser doesn't support the HTML5 canvas.</p> <p>Please consider updating to a more modern browser such as <a href=''>Google Chrome</a> or <a href=''>Mozilla FireFox</a>.</p>"
         },
 
         clear: function () {
@@ -33,7 +37,7 @@ define(function () {
         }
     };
 
-    return Sprite;
+    return Graphics;
 });
 
 
