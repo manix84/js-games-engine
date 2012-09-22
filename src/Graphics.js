@@ -30,7 +30,7 @@ define(function () {
     Graphics.prototype = {
         _options: {
             supportError: (
-                "<div style='padding:3px;background:#EBEBEB'>" +
+                "<div style='padding:3px;background:#CCC'>" +
                     "<img src='images/supportError.png' style='position:relative;margin:7px' />" +
                     "<p>Looks like your browser doesn't support the HTML5 canvas.</p>" +
                     "<p>Please consider updating to a more modern browser such as <a href=''>Google Chrome</a> or <a href=''>Mozilla FireFox</a>.</p>" +
@@ -40,6 +40,10 @@ define(function () {
 
         clear: function () {
             this._canvasContext.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        },
+
+        getContext: function () {
+            return this._canvasContext;
         }
     };
 
